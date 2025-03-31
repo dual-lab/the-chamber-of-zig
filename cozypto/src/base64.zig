@@ -20,7 +20,7 @@ pub const Base64 = struct {
         self: Self,
         allocator: std.mem.Allocator,
         input: []const u8,
-    ) ![]u8 {
+    ) ![]const u8 {
         if (input.len == 0) {
             return "";
         }
@@ -70,7 +70,7 @@ pub const Base64 = struct {
         self: Self,
         allocator: std.mem.Allocator,
         input: []const u8,
-    ) ![]u8 {
+    ) ![]const u8 {
         if (input.len == 0) {
             return "";
         }
@@ -127,11 +127,52 @@ pub const Base64 = struct {
     }
 
     fn calcDecoderLen(input: []const u8) !usize {
+        const noop_pos = std.mem.indexOf(u8, input, "=") orelse input.len;
         if (input.len < 4) {
             return @as(usize, 3);
         }
 
         const n_out = try math.divFloor(usize, input.len, 4);
-        return n_out * 3;
+        return n_out * 3 - (input.len - noop_pos);
     }
 };
+
+test "Return empty string if encdoding an empty string" {
+    const b64 = Base64.init();
+
+    const allocator = std.testing.allocator;
+    const encoded = try b64.encode(allocator, "");
+    defer allocator.free(encoded);
+
+    try std.testing.expectEqualStrings("", encoded);
+}
+
+test "Return empty string if decoding empty string" {
+    const b64 = Base64.init();
+
+    const allocator = std.testing.allocator;
+    const decoded = try b64.decode(allocator, "");
+    defer allocator.free(decoded);
+
+    try std.testing.expectEqualStrings("", decoded);
+}
+
+test "Correct encode in base64" {
+    const b64 = Base64.init();
+
+    const allocator = std.testing.allocator;
+    const encoded = try b64.encode(allocator, "i'm base64 encoded!");
+    defer allocator.free(encoded);
+
+    try std.testing.expectEqualStrings("aSdtIGJhc2U2NCBlbmNvZGVkIQ==", encoded);
+}
+
+test "Correct decode in base64" {
+    const b64 = Base64.init();
+
+    const allocator = std.testing.allocator;
+    const decoded = try b64.decode(allocator, "aSdtIGJhc2U2NCBlbmNvZGVkIQ==");
+    defer allocator.free(decoded);
+
+    try std.testing.expectEqualStrings("i'm base64 encoded!", decoded);
+}
