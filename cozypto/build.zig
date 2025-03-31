@@ -1,5 +1,5 @@
 const std = @import("std");
-const root_name = "zigypto";
+const root_name = "cozypto";
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});

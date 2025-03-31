@@ -1,17 +1,24 @@
 const std = @import("std");
-const zigypto_build = @import("zigypto/build.zig");
+const cozypto_build = @import("cozypto/build.zig");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
     // S1: Subproject
-    //// p1: zigypto
-    zigypto_build.buildFromRoot(b, target, optimize);
+    //// p1: cozypto
+    cozypto_build.buildFromRoot(b, target, optimize);
 
     // S2: Clenup
     //// c1: artifact cleanup
     ////// TODO: after study zip build system
+    const clean = b.step("clean", "Clean up prooject generated file");
+    clean.dependOn(&b.addRemoveDirTree(b.path("zig-out/")).step);
     //// c2: artifacto + cache
-    ////// TODO: after study zip build system
+    const clobber = b.step(
+        "clobber",
+        "Clean up project generated files and zig cache",
+    );
+    clobber.dependOn(clean);
+    clobber.dependOn(&b.addRemoveDirTree(b.path(".zig-cache/")).step);
 }

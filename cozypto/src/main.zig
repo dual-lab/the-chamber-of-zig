@@ -18,4 +18,4 @@ pub fn main() !void {
 }
 
 const std = @import("std");
-const lib = @import("zigypto");
+const lib = @import("cozypto");
