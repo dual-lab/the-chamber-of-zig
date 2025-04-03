@@ -27,6 +27,7 @@ pub const Base64 = struct {
 
         const n_out = try calcEncodeLen(input);
         var out = try allocator.alloc(u8, n_out);
+        errdefer allocator.free(out);
         @memset(out, 0);
 
         var count: u8 = 0;
@@ -77,6 +78,7 @@ pub const Base64 = struct {
 
         const n_out = try calcDecoderLen(input);
         const out = try allocator.alloc(u8, n_out);
+        errdefer allocator.free(out);
         @memset(out, 0);
 
         var count: u8 = 0;
