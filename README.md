@@ -69,8 +69,7 @@
 
 ### Built With
 
-* [Rust](https://www.zig-lang.org/)
-* [Earthly](https://docs.earthly.dev/)
+* Zig
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -84,7 +83,7 @@ TODO
 
 ### Prerequisites
 
-Install  [Rust](https://www.zig-lang.org/).
+Install  [Zig](https://ziglang.org/).
 
 ### Installation
 
