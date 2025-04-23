@@ -1,6 +1,7 @@
 const std = @import("std");
 const cozypto_build = @import("cozypto/build.zig");
 const cozstructure_build = @import("cozstructure/build.zig");
+const cozimg_build = @import("cozimg/build.zig");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
@@ -11,6 +12,8 @@ pub fn build(b: *std.Build) void {
     cozypto_build.buildFromRoot(b, target, optimize);
     //// p2: cozstructure
     cozstructure_build.buildFromRoot(b, target, optimize);
+    //// p3: cozimg
+    cozimg_build.buildFromRoot(b, target, optimize);
 
     // S2: Clenup
     //// c1: artifact cleanup

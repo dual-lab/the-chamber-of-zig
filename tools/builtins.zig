@@ -72,3 +72,29 @@ pub fn addTests(
         s.dependOn(&run_test.step);
     }
 }
+
+pub fn translateSystemC(
+    b: *std.Build,
+    t: std.Build.ResolvedTarget,
+    o: std.builtin.OptimizeMode,
+    src: []const u8,
+) *std.Build.Step.TranslateC {
+    return b.addTranslateC(.{
+        .root_source_file = .{.cwd_relative = src},
+        .target = t,
+        .optimize = o,
+    });
+}
+
+pub fn translateC(
+    b: *std.Build,
+    t: std.Build.ResolvedTarget,
+    o: std.builtin.OptimizeMode,
+    src: []const u8,
+) *std.Build.Step.TranslateC {
+    return b.addTranslateC(.{
+        .root_source_file = b.path(src),
+        .target = t,
+        .optimize = o,
+    });
+}
