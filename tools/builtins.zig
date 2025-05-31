@@ -1,5 +1,10 @@
 const std = @import("std");
 
+pub const Import = struct {
+    mod: *std.Build.Module,
+    name: []const u8
+};
+
 pub fn createLib(
     b: *std.Build,
     m: *std.Build.Module,
@@ -30,12 +35,17 @@ pub fn addModule(
     o: std.builtin.OptimizeMode,
     src: []const u8,
     name: []const u8,
+    imports: []const Import,
 ) *std.Build.Module {
     const lib_mod = b.addModule(name, .{
         .root_source_file = b.path(src),
         .target = t,
         .optimize = o,
     });
+
+    for (imports) |value| {
+        lib_mod.addImport(value.name, value.mod);
+    }
 
     return lib_mod;
 }
@@ -45,8 +55,7 @@ pub fn createModule(
     t: std.Build.ResolvedTarget,
     o: std.builtin.OptimizeMode,
     src: []const u8,
-    imports: []const *std.Build.Module,
-    name: []const u8,
+    imports: []const Import,
 ) *std.Build.Module {
     const exe_mod = b.createModule(.{
         .root_source_file = b.path(src),
@@ -55,7 +64,7 @@ pub fn createModule(
     });
 
     for (imports) |i| {
-        exe_mod.addImport(name, i);
+        exe_mod.addImport(i.name, i.mod);
     }
 
     return exe_mod;

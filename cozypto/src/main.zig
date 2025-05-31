@@ -15,7 +15,9 @@ pub fn main() !void {
     defer allocator.free(dout);
     std.debug.print("encode Base64 is {s} \n", .{eout});
     std.debug.print("decode Base64 is {s} \n", .{dout});
+    std.debug.print("color is {} \n", .{cli.xcolor.colors});
 }
 
 const std = @import("std");
 const lib = @import("cozypto");
+const cli = @import("cozcli");
